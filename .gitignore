@@ -1,3 +1,9 @@
+# Firebase config
+google-services.json
+
+# Google Maps config
+app/src/debug/res/values/google_maps_api.xml
+
 # Built application files
 *.apk
 *.aar
@@ -32,6 +38,7 @@ proguard/
 
 # Android Studio Navigation editor temp files
 .navigation/
+.idea/
 
 # Android Studio captures folder
 captures/
