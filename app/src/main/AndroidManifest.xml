@@ -35,15 +35,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".authentication.AuthenticationActivity">
-        </activity>
-        <activity android:name=".locationreminders.RemindersActivity" >
+        <activity android:name=".authentication.AuthenticationActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
+        </activity>
+        <activity android:name=".locationreminders.RemindersActivity" >
         </activity>
         <receiver
             android:name=".locationreminders.geofence.GeofenceBroadcastReceiver"
@@ -53,6 +52,14 @@
             android:name=".locationreminders.geofence.GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!-- https://knowledge.udacity.com/questions/811387#811788 -->
+        <activity android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"
+            android:exported="true"/>
+        <activity android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"
+            android:exported="true"/>
+        <activity android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

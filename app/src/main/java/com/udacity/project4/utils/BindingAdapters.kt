@@ -1,11 +1,13 @@
 package com.udacity.project4.utils
 
 import android.view.View
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.udacity.project4.R
 import com.udacity.project4.base.BaseRecyclerViewAdapter
-
+import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 
 object BindingAdapters {
 
@@ -43,5 +45,19 @@ object BindingAdapters {
                     view.fadeOut()
             }
         }
+    }
+
+    @BindingAdapter("reminderLatLong")
+    @JvmStatic
+    fun TextView.setReminderLatLong(reminderDataItem: ReminderDataItem) {
+        val latitude = reminderDataItem.latitude
+        val longitude = reminderDataItem.longitude
+
+        this.text =
+            if (latitude == null || longitude == null) ""
+            else String.format(
+                this.context.getString(R.string.lat_long_snippet),
+                latitude, longitude
+            )
     }
 }
