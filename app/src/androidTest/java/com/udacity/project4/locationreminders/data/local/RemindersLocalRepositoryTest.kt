@@ -1,5 +1,7 @@
 package com.udacity.project4.locationreminders.data.local
 
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.udacity.project4.MainCoroutineRule
@@ -10,6 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -24,13 +27,16 @@ class RemindersLocalRepositoryTest : BaseAndroidTest() {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var remindersDao: RemindersDao
+    private lateinit var database: RemindersDatabase
     private lateinit var remindersLocalRepository: RemindersLocalRepository
 
     @Before
     fun before() {
-        remindersDao = FakeRemindersDao()
-        remindersLocalRepository = RemindersLocalRepository(remindersDao, Dispatchers.Main)
+        database = Room.inMemoryDatabaseBuilder(
+            ApplicationProvider.getApplicationContext(),
+            RemindersDatabase::class.java
+        ).allowMainThreadQueries().build()
+        remindersLocalRepository = RemindersLocalRepository(database.reminderDao(), Dispatchers.Main)
     }
 
     @Test
@@ -58,6 +64,19 @@ class RemindersLocalRepositoryTest : BaseAndroidTest() {
 
         // THEN - the reminder is retrieved from database
         assertReminder(result.data, reminder)
+    }
+
+    @Test
+    fun getReminderByIdReturnsError() = mainCoroutineRule.runBlockingTest {
+        // GIVEN - the database is empty
+        remindersLocalRepository.deleteAllReminders()
+
+        // WHEN - retrieve reminder by id
+        val result = remindersLocalRepository.getReminder("fakeId") as Result.Error
+
+        // THEN - it returns an error
+        Assert.assertNotNull(result)
+        assertThat(result.message, `is`("Reminder not found!"))
     }
 
     @Test
